@@ -1,0 +1,34 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Примеры. Создание карты с местоположением пользователя.</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link href="https://yandex.st/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://yandex.st/jquery/1.8.0/jquery.min.js" type="text/javascript"></script>
+    <!--
+        Укажите свой API-ключ. Тестовый ключ НЕ БУДЕТ работать на других сайтах.
+        Получить ключ можно в Кабинете разработчика: https://developer.tech.yandex.ru/keys/
+    -->
+    <script 
+    src="https://api-maps.yandex.ru/2.0/?lang=ru-RU&amp;load=package.full&amp;apikey=<54a0d7b2-83eb-4f08-9f67-24b3456f3d6a>" 
+        type="text/javascript"></script>
+    <script src="{% static 'js/geolocation_service.js' %}" type="text/javascript"></script>
+    <style type="text/css">
+        #YMapsID {
+            width: 500px;
+            height: 400px;
+        }
+    </style>
+
+	<script src="{% static 'js/geolocation.js' %}" type="text/javascript"></script>
+</head>
+<body>
+<div class="hero-unit">
+    <div class="container">
+        <div id="YMapsID"></div>
+    </div>
+</div>
+</body>
+</html>

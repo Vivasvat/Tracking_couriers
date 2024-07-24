@@ -1,13 +1,79 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ title }}</title>
-</head>
-<body>
-    <p>
-        {{ Message }}
-    </p>
-</body>
+<html>
+  <head>
+    <title>Geolocation API</title>
+  </head>
+  <body>
+    <h1>Получение местоположения</h1>
+    <button onclick="getLocation()">Получить местоположение</button>
+    <p id="status"></p>
+    <script>
+      count = 0;
+      function getLocation() {
+        if (navigator.geolocation) {
+          navigator.geolocation.watchPosition(showPosition, showError);
+        } else {
+          document.getElementById("status").innerHTML =
+            "Geolocation не поддерживается этим браузером.";
+        }
+      }
+
+      function showPosition(position) {
+        var latitude = position.coords.latitude;
+        var longitude = position.coords.longitude;
+        count += 1;
+
+        document.getElementById("status").innerHTML =
+          "Широта: " +
+          latitude +
+          "<br>Долгота: " +
+          longitude +
+          "<br>Счётчк: " +
+          count;
+
+        // Отправка данных на сервер
+        fetch("/save_location/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": "{{ csrf_token }}",
+          },
+          body: JSON.stringify({
+            latitude: latitude,
+            longitude: longitude,
+            count: count,
+          }),
+        }).then((response) => {
+          if (response.ok) {
+            document.getElementById("status").innerHTML +=
+              "<br>Местоположение сохранено.";
+          } else {
+            document.getElementById("status").innerHTML +=
+              "<br>Ошибка при сохранении местоположения.";
+          }
+        });
+      }
+
+      function showError(error) {
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            document.getElementById("status").innerHTML =
+              "Пользователь отказал в запросе на геолокацию.";
+            break;
+          case error.POSITION_UNAVAILABLE:
+            document.getElementById("status").innerHTML =
+              "Информация о местоположении недоступна.";
+            break;
+          case error.TIMEOUT:
+            document.getElementById("status").innerHTML =
+              "Запрос на получение местоположения превысил лимит времени.";
+            break;
+          case error.UNKNOWN_ERROR:
+            document.getElementById("status").innerHTML =
+              "Произошла неизвестная ошибка.";
+            break;
+        }
+      }
+    </script>
+  </body>
 </html>

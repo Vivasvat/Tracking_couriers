@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GeoMain</title>
+  </head>
+  <body>
+    <p id="status"></p>
+    <p>Есть кто живой?</p>
+    <p>{{ response_data }}</p>
+    <p>{{ response_loc_data }}</p>
+    <p>{{ listres }}</p>
+    <p>{{ urlcour }}</p>
+    <p>{{ listorder }}</p>
+    <script>
+      // Отправка POST запроса
+      const response = await fetch("https://robotapitest.dostavista.ru/api/business/1.5/orders?status=available", {
+        method: "POST",
+        headers: {
+          "X-DV-Auth-Token" : "6DF1D823AA1439E7AEF2BB98E9A116D4CAC629F0",
+           // 6DF1D823AA1439E7AEF2BB98E9A116D4CAC629F0 Пример добавления заголовка
+          "Content-Type" : "application/json",
+        },
+        // body: JSON.stringify({
+        //     "matter":"Документы",
+        //     "points":[{
+        //         "address" : "Москва, ул. Покровка, 11",
+        //         "contact_person" : {"phone":"79163779894"}},
+        //     {
+        //         "address" : "Москва, ул. Солянка, 4",
+        //         "contact_person" : {"phone":"79163779894"}}
+        //     ]
+        // }),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Сеть не отвечает");
+          }
+          // return response.json();
+          // const data = response.json();
+          document.getElementById("status").innerHTML = response.json();
+        })
+        .then((data) => {
+          console.log(data);
+        })
+        .catch((error) => {
+          console.error(
+            "Возникла проблема с операцией получения данных:",
+            error
+          );
+        });
+    </script>
+  </body>
+</html>
